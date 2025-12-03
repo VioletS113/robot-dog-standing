@@ -227,7 +227,7 @@ class RewardsCfg:
     # )
     stand_upright = RewTerm(
         func=mdp.stand_upright,
-        weight=1.0, params={"asset_cfg": SceneEntityCfg("robot")},
+        weight=2.0, params={"asset_cfg": SceneEntityCfg("robot")},
     )
 
     # upright_penalty = RewTerm(
@@ -239,7 +239,7 @@ class RewardsCfg:
 
     reward_lift_up_linear = RewTerm(
         func=mdp.reward_lift_up_linear,
-        weight=0.5,
+        weight=1,
         params={"asset_cfg": SceneEntityCfg("robot")}
     )
 
@@ -341,18 +341,18 @@ class TerminationsCfg:
     #     params={"asset_cfg": SceneEntityCfg("robot")}
     # )
 
-    # position_protect = DoneTerm(
-    #     func=mdp.position_protect,
-    #     params={"asset_cfg": SceneEntityCfg("robot")}
-    # )
-    # stand_air_condition = DoneTerm(
-    #     func=mdp.stand_air_condition,
-    #     params={"asset_cfg": SceneEntityCfg("robot")}
-    # )
-    # abrupt_change_condition = DoneTerm(
-    #     func=mdp.abrupt_change_condition,
-    #     params={"asset_cfg": SceneEntityCfg("robot")}
-    # )
+    position_protect = DoneTerm(
+        func=mdp.position_protect,
+        params={"asset_cfg": SceneEntityCfg("robot")}
+    )
+    stand_air_condition = DoneTerm(
+        func=mdp.stand_air_condition,
+        params={"asset_cfg": SceneEntityCfg("robot")}
+    )
+    abrupt_change_condition = DoneTerm(
+        func=mdp.abrupt_change_condition,
+        params={"asset_cfg": SceneEntityCfg("robot")}
+    )
 
 ##
 # Environment configuration
