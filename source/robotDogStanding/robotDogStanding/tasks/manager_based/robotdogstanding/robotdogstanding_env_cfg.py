@@ -72,8 +72,8 @@ class ActionsCfg:
         "RL_hip_joint", "RL_thigh_joint", "RL_calf_joint",
         "RR_hip_joint", "RR_thigh_joint", "RR_calf_joint",
     ],
-    scale = 20,
-    # scale={".*_hip_joint": 10.0, "^(?!.*_hip_joint).*": 80.0, },
+    # scale = 20,
+    scale={".*_hip_joint": 10.0, "^(?!.*_hip_joint).*": 80.0, },
     clip={".*": (-100.0, 100.0)}
     )
 
@@ -151,7 +151,7 @@ class EventCfg:
     #             "RL_hip_joint", "RL_thigh_joint", "RL_calf_joint",
     #             "RR_hip_joint", "RR_thigh_joint", "RR_calf_joint",
     #         ]),
-    #         "position_range": (0.1, 0.3),
+    #         "position_range": (0.1, 0.15),
     #         "velocity_range": (-0.1 * math.pi, 0.1 * math.pi),
     #     },
     # )
@@ -166,14 +166,14 @@ class EventCfg:
     #             "RL_hip_joint", "RL_thigh_joint", "RL_calf_joint",
     #             "RR_hip_joint", "RR_thigh_joint", "RR_calf_joint",
     #         ]),
-    #         # "pose_range": {
-    #         #     "x": (-0.05, 0.05),
-    #         #     "y": (-0.05, 0.05),
-    #         #     "z": (0.05, 0.1),  # sitting height
-    #         #     "roll": (0.0, 0.0),
-    #         #     "pitch": (-0.5, -0.3),  # leaning back slightly
-    #         #     "yaw": (-0.1, 0.1)
-    #         # },
+    #         "pose_range": {
+    #             "x": (-0.1, 0.1),
+    #             "y": (-0.1, 0.1),
+    #             "z": (-0.1, 0.1),  # sitting height
+    #             "roll": (-0.1, 0.1),
+    #             "pitch": (-0.1, 0.1),  # leaning back slightly
+    #             "yaw": (-0.1, 0.1)
+    #         },
     #         "velocity_range": {
     #             "x": (0.01, 0.01),
     #             "y": (0.01, 0.01),
@@ -182,16 +182,16 @@ class EventCfg:
     #             "pitch": (0.01, 0.01),
     #             "yaw": (0.01, 0.01),
     #         },
-    #
-    #             "pose_range": {"x": (-0.1, 0.1), "y": (-0.1, 0.1), "yaw": (-0.1, 0.1)},
-    #                 "velocity_range": {
-    #                     "x": (-0.1, 0.1),
-    #                     "y": (-0.1, 0.1),
-    #                     "z": (-0.1, 0.15),
-    #                     "roll": (-0.1, 0.1),
-    #                     "pitch": (-0.8, 0),
-    #                     "yaw": (-0.1, 0.1),
-    #                 }
+    
+    #             # "pose_range": {"x": (-0.1, 0.1), "y": (-0.1, 0.1), "yaw": (-0.1, 0.1)},
+    #             #     "velocity_range": {
+    #             #         "x": (-0.1, 0.1),
+    #             #         "y": (-0.1, 0.1),
+    #             #         "z": (-0.1, 0.1),
+    #             #         "roll": (-0.1, 0.1),
+    #             #         "pitch": (-0.1, 0.1),
+    #             #         "yaw": (-0.1, 0.1),
+    #             #     }
     #     }
     # )
 
@@ -207,7 +207,7 @@ class EventCfg:
         #         ])
         # }
     )
-    pass
+    # pass
 
 @configclass
 class RewardsCfg:
@@ -227,7 +227,7 @@ class RewardsCfg:
     # )
     stand_upright = RewTerm(
         func=mdp.stand_upright,
-        weight=2.0, params={"asset_cfg": SceneEntityCfg("robot")},
+        weight=1.0, params={"asset_cfg": SceneEntityCfg("robot")},
     )
 
     # upright_penalty = RewTerm(
@@ -239,7 +239,7 @@ class RewardsCfg:
 
     reward_lift_up_linear = RewTerm(
         func=mdp.reward_lift_up_linear,
-        weight=1,
+        weight=0.8,
         params={"asset_cfg": SceneEntityCfg("robot")}
     )
 
@@ -257,50 +257,50 @@ class RewardsCfg:
     #     params={"asset_cfg": SceneEntityCfg("robot")}
     # )
 
-    action_rate_l2 = RewTerm(
-        func=mdp.action_rate_l2_early_training,
-        weight = -0.03
-    )
-    smooth_vel = RewTerm(
-        func=mdp.joint_vel_l2,
-        weight=-0.0001
-    )
+    # action_rate_l2 = RewTerm(
+    #     func=mdp.action_rate_l2_early_training,
+    #     weight = -0.03
+    # )
+    # smooth_vel = RewTerm(
+    #     func=mdp.joint_vel_l2,
+    #     weight=-0.0001
+    # )
 
-    smooth_acc= RewTerm(
-        func=mdp.joint_acc_l2,
-        weight=-2.5e-07
-    )
-    joint_pos_limits = RewTerm(
-        func=mdp.joint_pos_limits,
-        weight=-10
-    )
-    feet_clearance_cmd_linear = RewTerm(
-        func=mdp.feet_clearance_cmd_linear,
-        weight=-300
-    )
+    # smooth_acc= RewTerm(
+    #     func=mdp.joint_acc_l2,
+    #     weight=-2.5e-07
+    # )
+    # joint_pos_limits = RewTerm(
+    #     func=mdp.joint_pos_limits,
+    #     weight=-10
+    # )
+    # feet_clearance_cmd_linear = RewTerm(
+    #     func=mdp.feet_clearance_cmd_linear,
+    #     weight=-300
+    # )
     #
-    feet_slip = RewTerm(
-        func=mdp.feet_slip,
-        weight=-0.4
-    )
+    # feet_slip = RewTerm(
+    #     func=mdp.feet_slip,
+    #     weight=-0.4
+    # )
     #
     # applied_torque_limits = RewTerm(
     #     func=mdp.applied_torque_limits,
     #     weight=-0.01
     # )
-    #
-    foot_shift = RewTerm(
-        func=mdp.foot_shift,
-        weight=-50
-    )
+    # #
+    # foot_shift = RewTerm(
+    #     func=mdp.foot_shift,
+    #     weight=-50
+    # )
     #
     # ang_vel_xy_l2 = RewTerm(func=mdp.ang_vel_xy_l2, weight=-0.05)
     #
-    undesired_contacts = RewTerm(
-        func=mdp.undesired_contacts,
-        weight=-2.0,
-        params={"sensor_cfg": SceneEntityCfg("contact_forces", body_names="^(?!RL_foot$|RR_foot$).*"), "threshold": 0.1},
-    )
+    # undesired_contacts = RewTerm(
+    #     func=mdp.undesired_contacts,
+    #     weight=-2.0,
+    #     params={"sensor_cfg": SceneEntityCfg("contact_forces", body_names="^(?!RL_foot$|RR_foot$).*"), "threshold": 0.1},
+    # )
 
     # feet_distance_y_exp= RewTerm(
     #     func=mdp.feet_distance_y_exp,
@@ -311,16 +311,16 @@ class RewardsCfg:
 
 
 
-    action_q_diff = RewTerm(
-        func=mdp.action_q_diff,
-        weight = -1.0,
-        params={"asset_cfg": SceneEntityCfg("robot")}
-    )
+    # action_q_diff = RewTerm(
+    #     func=mdp.action_q_diff,
+    #     weight = -1.0,
+    #     params={"asset_cfg": SceneEntityCfg("robot")}
+    # )
 
-    applied_torque_limits = RewTerm(
-        func=mdp.applied_torque_limits,
-        weight=-0.01
-    )
+    # applied_torque_limits = RewTerm(
+    #     func=mdp.applied_torque_limits,
+    #     weight=-0.01
+    # )
 
 
 @configclass
@@ -375,13 +375,13 @@ class RobotdogstandingEnvCfg(ManagerBasedRLEnvCfg):
     def __post_init__(self) -> None:
         """Post initialization."""
         # general settings
-        self.decimation = 2
+        self.decimation = 5
         # modified one original is 5
         self.episode_length_s = 10
         # viewer settings
         self.viewer.eye = (8.0, 0.0, 5.0)
         # simulation settings
-        self.sim.dt = 1 / 120
+        self.sim.dt = 0.002
         self.sim.render_interval = self.decimation
 
 

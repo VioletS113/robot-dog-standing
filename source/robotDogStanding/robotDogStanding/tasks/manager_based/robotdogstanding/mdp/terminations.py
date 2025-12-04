@@ -59,8 +59,8 @@ def stand_air_condition( env: ManagerBasedRLEnv, asset_cfg: SceneEntityCfg = Sce
 def abrupt_change_condition(env: ManagerBasedRLEnv, asset_cfg: SceneEntityCfg = SceneEntityCfg("robot")):
     asset = env.scene[asset_cfg.name]
     abrupt_change_condition = torch.logical_and(
-            torch.logical_and(env.episode_length_buf > 3, env.episode_length_buf <= 30),
+            torch.logical_and(env.episode_length_buf > 3, env.episode_length_buf <= 100),
                 # torch.logical_and(self.episode_length_buf > 3, self.episode_length_buf <= 100),
-            torch.any(torch.abs(asset.data.joint_pos - env.last_dof_pos) > 0.3, dim=-1)
+            torch.any(torch.abs(asset.data.joint_pos - env.last_dof_pos) > 0.5, dim=-1)
     )
     return abrupt_change_condition

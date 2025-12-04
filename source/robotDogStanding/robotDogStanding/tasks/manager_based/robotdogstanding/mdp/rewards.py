@@ -137,7 +137,7 @@ def reward_feet_air_time_simple(env: ManagerBasedRLEnv, asset_cfg: SceneEntityCf
 def reward_lift_up_linear(env: ManagerBasedRLEnv, asset_cfg: SceneEntityCfg) -> torch.Tensor:
     asset = env.scene[asset_cfg.name]
     root_height = asset.data.root_pos_w[:, 2]
-    reward = (root_height - 0.15) / (0.42 - 0.15)
+    reward = (root_height - 0.15) / (0.52 - 0.15)
     reward = torch.clamp(reward, 0., 1.)
     return reward
 
