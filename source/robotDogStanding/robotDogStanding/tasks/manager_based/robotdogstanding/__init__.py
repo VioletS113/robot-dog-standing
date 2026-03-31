@@ -21,3 +21,13 @@ gym.register(
         "skrl_cfg_entry_point": f"{agents.__name__}:skrl_ppo_cfg.yaml",
     },
 )
+
+gym.register(
+    id="Template-Robotdogstanding-PD-v0",
+    entry_point=f"{__name__}.robotdogstanding_pd_env:robotdogStandingEnv",
+    disable_env_checker=True,
+    kwargs={
+        "env_cfg_entry_point": f"{__name__}.robotdogstanding_pd_env_cfg:RobotdogstandingPDEnvCfg",
+        "skrl_cfg_entry_point": f"{agents.__name__}:skrl_ppo_cfg.yaml",
+    },
+)
