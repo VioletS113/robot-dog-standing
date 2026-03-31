@@ -129,7 +129,7 @@ class TerminationsCfg:
 class RobotdogstandingPDEnvCfg(ManagerBasedRLEnvCfg):
     """Manager-based RL config used by the PD standing environment implementation."""
 
-    scene: RobotdogstandingPDSceneCfg = RobotdogstandingPDSceneCfg(num_envs=4096, env_spacing=4.0)
+    scene: RobotdogstandingPDSceneCfg = RobotdogstandingPDSceneCfg(num_envs=16, env_spacing=4.0)
     observations: ObservationsCfg = ObservationsCfg()
     actions: ActionsCfg = ActionsCfg()
     events: EventCfg = EventCfg()

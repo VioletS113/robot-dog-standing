@@ -40,19 +40,19 @@ class robotdogStandingEnv(ManagerBasedRLEnv):
             requires_grad=False,
         )
         self.pd_kp = torch.tensor(
-            [40.0, 60.0, 60.0, 40.0, 60.0, 60.0, 40.0, 60.0, 60.0, 40.0, 60.0, 60.0],
+            [60.0, 90.0, 90.0, 60.0, 90.0, 90.0, 60.0, 90.0, 90.0, 60.0, 90.0, 90.0],
             dtype=torch.float,
             device=self.device,
             requires_grad=False,
         )
         self.pd_kd = torch.tensor(
-            [2.0, 3.0, 3.0, 2.0, 3.0, 3.0, 2.0, 3.0, 3.0, 2.0, 3.0, 3.0],
+            [3.0, 4.0, 4.0, 3.0, 4.0, 4.0, 3.0, 4.0, 4.0, 3.0, 4.0, 4.0],
             dtype=torch.float,
             device=self.device,
             requires_grad=False,
         )
-        self.pd_torque_min = -100.0
-        self.pd_torque_max = 100.0
+        self.pd_torque_min = -120.0
+        self.pd_torque_max = 120.0
         # for i in range(12):
         #     name = self.dof_names[i]
         #     angle = self.cfg.init_state.default_joint_angles[name]
@@ -120,6 +120,25 @@ class robotdogStandingEnv(ManagerBasedRLEnv):
         else:
             raise AttributeError("Robot articulation does not expose a supported joint effort API.")
 
+    def _initialize_pd_joint_state(self, env_ids: torch.Tensor):
+        """Initialize reset environments near the PD standing target with zero joint velocity."""
+        robot = self.scene["robot"]
+        joint_pos = robot.data.joint_pos[env_ids].clone()
+        joint_vel = robot.data.joint_vel[env_ids].clone()
+
+        joint_pos[:, :12] = self.standing_joint_pos_target.unsqueeze(0)
+        joint_vel[:, :12] = 0.0
+
+        if hasattr(robot, "write_joint_state_to_sim"):
+            robot.write_joint_state_to_sim(joint_pos, joint_vel, env_ids=env_ids)
+        else:
+            robot.data.joint_pos[env_ids] = joint_pos
+            robot.data.joint_vel[env_ids] = joint_vel
+
+        self.last_dof_pos[env_ids] = joint_pos[:, :12]
+        self.gait_indices[env_ids] = 0.0
+        self.desired_contact_states[env_ids] = 1.0
+
     # def _reward_custom(self):
     #     # Example of custom reward
     #     return torch.ones(self.num_envs, device=self.device)
@@ -177,8 +196,7 @@ class robotdogStandingEnv(ManagerBasedRLEnv):
 
         self.common_step_counter += 1  # total step (common for all envs)
 
-        # post physics call back
-        self._step_contact_targets()
+        # Standing-only PD task: locomotion gait/contact scheduling is disabled.
         # -- check terminations
         self.reset_buf = self.termination_manager.compute()
         self.reset_terminated = self.termination_manager.terminated
@@ -198,6 +216,7 @@ class robotdogStandingEnv(ManagerBasedRLEnv):
             self.recorder_manager.record_pre_reset(reset_env_ids)
 
             self._reset_idx(reset_env_ids)
+            self._initialize_pd_joint_state(reset_env_ids)
             # update articulation kinematics
             self.scene.write_data_to_sim()
             self.sim.forward()
@@ -320,6 +339,8 @@ class robotdogStandingEnv(ManagerBasedRLEnv):
 
         # reset state of scene
         self._reset_idx(env_ids)
+        # override reset state with PD standing initialization for stable bring-up
+        self._initialize_pd_joint_state(env_ids)
 
         # update articulation kinematics
         self.scene.write_data_to_sim()
