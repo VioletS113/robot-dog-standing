@@ -65,7 +65,7 @@ class ActionsCfg:
             "RR_calf_joint",
         ],
         scale={".*_hip_joint": 1.0, "^(?!.*_hip_joint).*": 1.0},
-        clip={".*": (-100.0, 100.0)},
+        clip={".*": (-80.0, 80.0)},
     )
 
 
@@ -116,13 +116,13 @@ class RewardsCfg:
 
 @configclass
 class TerminationsCfg:
-    """Relaxed terminations for PD standing bring-up."""
-
     time_out = DoneTerm(func=mdp.time_out, time_out=True)
-    position_protect = DoneTerm(
-        func=mdp.position_protect,
-        params={"asset_cfg": SceneEntityCfg("robot")},
-    )
+
+    # position_protect disabled for conservative PD debugging pass to reduce early 4-step failures.
+    # position_protect = DoneTerm(
+    #     func=mdp.position_protect,
+    #     params={"asset_cfg": SceneEntityCfg("robot")},
+    # )
 
 
 @configclass

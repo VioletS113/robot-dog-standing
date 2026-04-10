@@ -39,20 +39,22 @@ class robotdogStandingEnv(ManagerBasedRLEnv):
             device=self.device,
             requires_grad=False,
         )
+
+        # Conservative PD gains for standing stabilization.
         self.pd_kp = torch.tensor(
-            [60.0, 90.0, 90.0, 60.0, 90.0, 90.0, 60.0, 90.0, 90.0, 60.0, 90.0, 90.0],
+            [40.0, 60.0, 60.0, 40.0, 60.0, 60.0, 40.0, 60.0, 60.0, 40.0, 60.0, 60.0],
             dtype=torch.float,
             device=self.device,
             requires_grad=False,
         )
         self.pd_kd = torch.tensor(
-            [3.0, 4.0, 4.0, 3.0, 4.0, 4.0, 3.0, 4.0, 4.0, 3.0, 4.0, 4.0],
+            [5.0, 7.0, 7.0, 5.0, 7.0, 7.0, 5.0, 7.0, 7.0, 5.0, 7.0, 7.0],
             dtype=torch.float,
             device=self.device,
             requires_grad=False,
         )
-        self.pd_torque_min = -120.0
-        self.pd_torque_max = 120.0
+        self.pd_torque_min = -80.0
+        self.pd_torque_max = 80.0
         # for i in range(12):
         #     name = self.dof_names[i]
         #     angle = self.cfg.init_state.default_joint_angles[name]
