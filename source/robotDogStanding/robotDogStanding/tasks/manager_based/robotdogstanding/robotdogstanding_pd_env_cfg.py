@@ -1,3 +1,8 @@
+# Copyright (c) 2022-2025, The Isaac Lab Project Developers (https://github.com/isaac-sim/IsaacLab/blob/main/CONTRIBUTORS.md).
+# All rights reserved.
+#
+# SPDX-License-Identifier: BSD-3-Clause
+
 import isaaclab.sim as sim_utils
 from isaaclab.assets import ArticulationCfg, AssetBaseCfg
 from isaaclab.envs import ManagerBasedRLEnvCfg
@@ -18,6 +23,8 @@ from isaaclab_assets.robots.unitree import UNITREE_GO2_CFG
 
 @configclass
 class RobotdogstandingPDSceneCfg(InteractiveSceneCfg):
+    """Scene configuration for the PD standing task."""
+
     ground = AssetBaseCfg(
         prim_path="/World/ground",
         spawn=sim_utils.GroundPlaneCfg(size=(100.0, 100.0)),
@@ -35,7 +42,11 @@ class RobotdogstandingPDSceneCfg(InteractiveSceneCfg):
 
 @configclass
 class ActionsCfg:
-    """Minimal action manager definition kept for ManagerBasedRLEnv compatibility."""
+    """Minimal action manager definition kept for ManagerBasedRLEnv compatibility.
+
+    Note:
+        The PD environment ignores incoming policy actions and computes torques internally.
+    """
 
     joint_effort = mdp.JointEffortActionCfg(
         asset_name="robot",
@@ -60,6 +71,8 @@ class ActionsCfg:
 
 @configclass
 class ObservationsCfg:
+    """Observation specifications for PD standing."""
+
     @configclass
     class PolicyCfg(ObsGroup):
         base_lin_vel = ObsTerm(func=mdp.base_lin_vel, scale=2.0)
@@ -77,6 +90,8 @@ class ObservationsCfg:
 
 @configclass
 class EventCfg:
+    """Event configuration for PD standing."""
+
     reset_scene_to_default = EventTerm(
         func=mdp.reset_scene_to_default,
         mode="reset",
@@ -85,6 +100,8 @@ class EventCfg:
 
 @configclass
 class RewardsCfg:
+    """Conservative rewards for PD debugging/standing behavior."""
+
     stand_upright = RewTerm(
         func=mdp.stand_upright,
         weight=1.0,
@@ -110,6 +127,8 @@ class TerminationsCfg:
 
 @configclass
 class RobotdogstandingPDEnvCfg(ManagerBasedRLEnvCfg):
+    """Manager-based RL config used by the PD standing environment implementation."""
+
     scene: RobotdogstandingPDSceneCfg = RobotdogstandingPDSceneCfg(num_envs=16, env_spacing=4.0)
     observations: ObservationsCfg = ObservationsCfg()
     actions: ActionsCfg = ActionsCfg()
